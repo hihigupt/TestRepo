@@ -24,4 +24,5 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: echo "----> ${{ secrets.TEST_SECRET }}"
+        run: echo "----> ${{ secrets.TEST_SECRET }} "; ls -altr ./
+        
