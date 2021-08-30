@@ -17,9 +17,9 @@ jobs:
       
       # Forked repo
       - uses: actions/checkout@v2
-        #with:
-        #  ref: ${{ github.event.pull_request.head.ref }}
-        #  repository: ${{ github.event.pull_request.head.repo.full_name }}
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
         if: >-
           github.event_name == 'pull_request_target' &&
           github.event.pull_request.head.repo.full_name != github.repository
