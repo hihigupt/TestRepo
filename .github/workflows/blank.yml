@@ -25,7 +25,7 @@ jobs:
           github.event.pull_request.head.repo.full_name != github.repository
 
       - name: Style Check
-        run: sudo bash -c echo "Style Check"
+        run: sudo bash -c echo "--->Style Check"
         if: >-
           (
             github.event_name == 'pull_request' &&
@@ -47,7 +47,7 @@ jobs:
           )
 
       - name: Configure
-        run: sudo bash -c echo "Configure"
+        run: sudo bash -c echo "--->Configure"
         if: >-
           (
             github.event_name == 'pull_request' &&
@@ -58,7 +58,7 @@ jobs:
           )
 
       - name: Fetch FreeRTOS
-        run: sudo bash -c echo "Fetch FreeRTOS"
+        run: sudo bash -c echo "--->Fetch FreeRTOS"
         if: >-
           (
             github.event_name == 'pull_request' &&
@@ -69,7 +69,7 @@ jobs:
           )
 
       - name: Build with Clang
-        run: sudo bash -c echo "Build with Clang"
+        run: sudo bash -c echo "--->Build with Clang"
         if: >-
           (
             github.event_name == 'pull_request' &&
@@ -80,7 +80,7 @@ jobs:
           )
 
       - name: Check-in Tests
-        run: sudo bash -c echo "Check-in Tests"
+        run: sudo bash -c echo "--->Check-in Tests"
         if: >-
           (
             github.event_name == 'pull_request' &&
