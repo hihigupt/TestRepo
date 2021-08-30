@@ -1,44 +1,90 @@
-# This is a basic workflow to help you get started with Actions
+name: Linux CI Tests
 
-name: CI
-
-# Controls when the workflow will run
-on:
-  pull_request_target:
-    types: [labeled]
+on: 
   pull_request:
-    types: [labeled]
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+  pull_request_target:
+
 jobs:
-  # This workflow contains a single job called "build"
-  build_with_fork:
-  
-    runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, 'safe to test') &&
-      ( github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.fork == true ) 
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo "----> ${{ secrets.TEST_SECRET }} "; ls -altr ./
   build:
-  
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, 'safe to test') &&
-        ( github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false ) 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      # Same repo
       - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
+        if: >-
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository
+      
+      # Forked repo
+      - uses: actions/checkout@v2
+        #with:
+        #  ref: ${{ github.event.pull_request.head.ref }}
+        #  repository: ${{ github.event.pull_request.head.repo.full_name }}
+        if: >-
+          github.event_name == 'pull_request_target' &&
+          github.event.pull_request.head.repo.full_name != github.repository
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo "----> ${{ secrets.TEST_SECRET }} "; ls -altr ./
-          
+      - name: Style Check
+        run: sudo bash -c echo "Style Check"
+        if: >-
+          (
+            github.event_name == 'pull_request' &&
+            github.event.pull_request.head.repo.full_name == github.repository
+          ) || (
+            github.event_name == 'pull_request_target' &&
+            github.event.pull_request.head.repo.full_name != github.repository
+          )
+
+      - name: Submodules Init
+        uses: snickerbockers/submodules-init@v4
+        if: >-
+          (
+            github.event_name == 'pull_request' &&
+            github.event.pull_request.head.repo.full_name == github.repository
+          ) || (
+            github.event_name == 'pull_request_target' &&
+            github.event.pull_request.head.repo.full_name != github.repository
+          )
+
+      - name: Configure
+        run: sudo bash -c echo "Configure"
+        if: >-
+          (
+            github.event_name == 'pull_request' &&
+            github.event.pull_request.head.repo.full_name == github.repository
+          ) || (
+            github.event_name == 'pull_request_target' &&
+            github.event.pull_request.head.repo.full_name != github.repository
+          )
+
+      - name: Fetch FreeRTOS
+        run: sudo bash -c echo "Fetch FreeRTOS"
+        if: >-
+          (
+            github.event_name == 'pull_request' &&
+            github.event.pull_request.head.repo.full_name == github.repository
+          ) || (
+            github.event_name == 'pull_request_target' &&
+            github.event.pull_request.head.repo.full_name != github.repository
+          )
+
+      - name: Build with Clang
+        run: sudo bash -c echo "Build with Clang"
+        if: >-
+          (
+            github.event_name == 'pull_request' &&
+            github.event.pull_request.head.repo.full_name == github.repository
+          ) || (
+            github.event_name == 'pull_request_target' &&
+            github.event.pull_request.head.repo.full_name != github.repository
+          )
+
+      - name: Check-in Tests
+        run: sudo bash -c echo "Check-in Tests"
+        if: >-
+          (
+            github.event_name == 'pull_request' &&
+            github.event.pull_request.head.repo.full_name == github.repository
+          ) || (
+            github.event_name == 'pull_request_target' &&
+            github.event.pull_request.head.repo.full_name != github.repository
+          )
