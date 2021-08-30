@@ -59,7 +59,7 @@ jobs:
           )
 
       - name: Fetch FreeRTOS
-        run: sudo bash -c echo "Fetch FreeRTOS"
+        run: sudo bash -c echo ",.,.,.,.,.<><><><><>Fetch FreeRTOS"
         if: >-
           (
             github.event_name == 'pull_request' &&
