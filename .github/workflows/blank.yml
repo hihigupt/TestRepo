@@ -11,10 +11,11 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  build_with_fork:
   
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, 'safe to test')
+    if: contains(github.event.pull_request.labels.*.name, 'safe to test') &&
+      ( github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.fork == true ) 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -25,4 +26,19 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: echo "----> ${{ secrets.TEST_SECRET }} "; ls -altr ./
-        
+  build:
+  
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'safe to test') &&
+        ( github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false ) 
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo "----> ${{ secrets.TEST_SECRET }} "; ls -altr ./
+          
